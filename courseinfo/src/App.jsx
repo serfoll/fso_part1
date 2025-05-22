@@ -17,24 +17,24 @@ const Part = (props) => {
 
 const Content = (props) => {
   console.log(`props in Content: ${JSON.stringify(props)}`);
+  const parts = props.parts;
   return (
     <div>
-      <Part part={props.parts[0]} />
-      <Part part={props.parts[1]} />
-      <Part part={props.parts[2]} />
+      {parts.map((part) => (
+        <Part key={part.name} part={part} />
+      ))}
     </div>
   );
 };
 
 const Total = (props) => {
   console.log(`props in Total: ${JSON.stringify(props)}`);
+
   const parts = props.parts;
-  return (
-    <p>
-      Number of exercises{" "}
-      {parts[0].exercises + parts[1].exercises + parts[2].exercises}
-    </p>
-  );
+  let totalExercises = 0;
+  parts.map((part) => (totalExercises += part.exercises));
+
+  return <p>Number of exercises {totalExercises}</p>;
 };
 
 const App = () => {
