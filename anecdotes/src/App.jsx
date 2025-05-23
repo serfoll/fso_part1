@@ -41,45 +41,34 @@ const App = () => {
   const [mostVoted, setMostVoted] = useState({ anecdote: "", votes: 0 });
 
   const getRandomInt = (max) => {
-    console.log("max int to generate: ", max);
     return Math.floor(Math.random() * max);
   };
 
   const onNewAnecdote = () => {
-    console.log("should generate random int");
     const currentInt = selected;
     let randomInt = getRandomInt(anecdotes.length);
-    console.log("randomInt genereated: ", randomInt);
 
     // prevent getting the same number in row
     while (randomInt === currentInt) {
-      console.log("currentInt: ", currentInt);
       randomInt = getRandomInt(anecdotes.length);
-      console.log("randomInt while loop: ", randomInt);
     }
-
-    console.log("selected anectod: ", anecdotes[randomInt]);
 
     setSelected(randomInt);
   };
 
   const onVote = () => {
     let currentVote = votes[selected] || 0;
-    console.log("current vote for ", selected, ": ", currentVote);
-
     const newTotalVote = currentVote + 1;
-    console.log("new total votes", selected, ": ", newTotalVote);
-
     const votesUpdated = { ...votes, [selected]: newTotalVote };
-    console.log("updated votes", selected, ": ", votesUpdated);
+
     setVotes(votesUpdated);
 
+    // update most voted on anecdote
     if (newTotalVote > mostVoted.votes) {
       const newMostVoted = {
         anecdote: anecdotes[selected],
         votes: newTotalVote,
       };
-      console.log("New mosted voted on: ", newMostVoted);
       setMostVoted(newMostVoted);
     }
   };
