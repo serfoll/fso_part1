@@ -15,8 +15,34 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const getRandomInt = (max) => {
+    console.log("max int to generate: ", max);
+    return Math.floor(Math.random() * max);
+  };
 
-  return <div>{anecdotes[selected]}</div>;
+  const getRandomAnecdote = () => {
+    console.log("should generate random int");
+    const currentInt = selected;
+    let randomInt = getRandomInt(anecdotes.length);
+    console.log("randomInt genereated: ", randomInt);
+
+    // prevent getting the same number in row
+    while (randomInt === currentInt) {
+      console.log("currentInt: ", currentInt);
+      randomInt = getRandomInt(anecdotes.length);
+      console.log("randomInt while loop: ", randomInt);
+    }
+
+    console.log("selected anectod: ", anecdotes[randomInt]);
+    setSelected(randomInt);
+  };
+
+  return (
+    <div>
+      <p>{anecdotes[selected]}</p>
+      <button onClick={getRandomAnecdote}>new anecdote</button>
+    </div>
+  );
 };
 
 export default App;
