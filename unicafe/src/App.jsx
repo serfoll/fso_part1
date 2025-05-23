@@ -2,9 +2,10 @@
 import { useState } from "react";
 
 const StatisticLine = ({ text, value }) => (
-  <p>
-    {text} {value} {text === " positive" && "%"}
-  </p>
+  <tr>
+    <td>{text}</td>
+    {text === "positive" ? <td>{value} %</td> : <td>{value}</td>}
+  </tr>
 );
 
 const Statistics = ({ good, neutral, bad, all, average, positive }) => {
@@ -13,14 +14,16 @@ const Statistics = ({ good, neutral, bad, all, average, positive }) => {
       {all === 0 ? (
         <p>No feedback given</p>
       ) : (
-        <>
-          <StatisticLine text={"good"} value={good} />
-          <StatisticLine text={"neutral"} value={neutral} />
-          <StatisticLine text={"bad"} value={bad} />
-          <StatisticLine text={"all"} value={all} />
-          <StatisticLine text={"average"} value={average} />
-          <StatisticLine text={"positive"} value={positive} />
-        </>
+        <table>
+          <tbody>
+            <StatisticLine text={"good"} value={good} />
+            <StatisticLine text={"neutral"} value={neutral} />
+            <StatisticLine text={"bad"} value={bad} />
+            <StatisticLine text={"all"} value={all} />
+            <StatisticLine text={"average"} value={average} />
+            <StatisticLine text={"positive"} value={positive} />
+          </tbody>
+        </table>
       )}
     </div>
   );
@@ -39,8 +42,6 @@ const App = () => {
   const [positive, setPositive] = useState(0);
 
   const onFeedback = (feedback) => {
-    console.log("given feedback is: ", feedback);
-
     let countUpdated = 0;
     let allUpdated = 0;
     let averageUpdate = 0;
@@ -80,6 +81,8 @@ const App = () => {
         break;
       default:
     }
+
+    console.log("given feedback is: ", feedback, countUpdated);
   };
 
   return (
