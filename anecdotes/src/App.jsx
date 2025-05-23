@@ -15,12 +15,14 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState({});
+
   const getRandomInt = (max) => {
     console.log("max int to generate: ", max);
     return Math.floor(Math.random() * max);
   };
 
-  const getRandomAnecdote = () => {
+  const onNewAnecdote = () => {
     console.log("should generate random int");
     const currentInt = selected;
     let randomInt = getRandomInt(anecdotes.length);
@@ -34,13 +36,28 @@ const App = () => {
     }
 
     console.log("selected anectod: ", anecdotes[randomInt]);
+
     setSelected(randomInt);
+  };
+
+  const onVote = () => {
+    let currentVote = votes[selected] ? votes[selected] : 0;
+    console.log("current vote for ", selected, ": ", currentVote);
+
+    const newTotalVote = currentVote + 1;
+    console.log("new total votes", selected, ": ", newTotalVote);
+
+    const updateVotes = { ...votes, [selected]: newTotalVote };
+    console.log("updated votes", selected, ": ", updateVotes);
+    setVotes(updateVotes);
   };
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={getRandomAnecdote}>new anecdote</button>
+      <p>has {votes[selected] ? votes[selected] : 0} votes</p>
+      <button onClick={onVote}>vote</button>
+      <button onClick={onNewAnecdote}>new anecdote</button>
     </div>
   );
 };
