@@ -2,6 +2,28 @@
 
 import { useState } from "react";
 
+const Anecdote = ({ anecdote, votes }) => {
+  return (
+    <div>
+      <p>{anecdote}</p>
+      <p>has {votes} votes</p>
+    </div>
+  );
+};
+
+const AnecdoteMostVoted = ({ mostVoted }) => {
+  const anecdote = mostVoted.anecdote;
+  const votes = mostVoted.votes;
+
+  return votes === 0 ? (
+    <p>No votes available yet</p>
+  ) : (
+    <Anecdote anecdote={anecdote} votes={votes} />
+  );
+};
+
+const Button = ({ action, label }) => <button onClick={action}>{label}</button>;
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -16,6 +38,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState({});
+  const [mostVoted, setMostVoted] = useState({ anecdote: "", votes: 0 });
 
   const getRandomInt = (max) => {
     console.log("max int to generate: ", max);
@@ -41,23 +64,35 @@ const App = () => {
   };
 
   const onVote = () => {
-    let currentVote = votes[selected] ? votes[selected] : 0;
+    let currentVote = votes[selected] || 0;
     console.log("current vote for ", selected, ": ", currentVote);
 
     const newTotalVote = currentVote + 1;
     console.log("new total votes", selected, ": ", newTotalVote);
 
-    const updateVotes = { ...votes, [selected]: newTotalVote };
-    console.log("updated votes", selected, ": ", updateVotes);
-    setVotes(updateVotes);
+    const votesUpdated = { ...votes, [selected]: newTotalVote };
+    console.log("updated votes", selected, ": ", votesUpdated);
+    setVotes(votesUpdated);
+
+    if (newTotalVote > mostVoted.votes) {
+      const newMostVoted = {
+        anecdote: anecdotes[selected],
+        votes: newTotalVote,
+      };
+      console.log("New mosted voted on: ", newMostVoted);
+      setMostVoted(newMostVoted);
+    }
   };
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {votes[selected] ? votes[selected] : 0} votes</p>
-      <button onClick={onVote}>vote</button>
-      <button onClick={onNewAnecdote}>new anecdote</button>
+      <h1>Anectode of the day</h1>
+      <Anecdote anecdote={anecdotes[selected]} votes={votes[selected] || 0} />
+      <Button action={onVote} label={"vote"} />
+      <Button action={onNewAnecdote} label={"new anecdote"} />
+
+      <h2>Anecdote with most votes</h2>
+      <AnecdoteMostVoted mostVoted={mostVoted} />
     </div>
   );
 };
