@@ -11,10 +11,7 @@ const Anecdote = ({ anecdote, votes }) => {
   );
 };
 
-const AnecdoteMostVoted = ({ mostVoted }) => {
-  const anecdote = mostVoted.anecdote;
-  const votes = mostVoted.votes;
-
+const AnecdoteMostVoted = ({ anecdote, votes }) => {
   return votes === 0 ? (
     <p>No votes available yet</p>
   ) : (
@@ -37,51 +34,42 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
-  const [votes, setVotes] = useState({});
-  const [mostVoted, setMostVoted] = useState({ anecdote: "", votes: 0 });
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
-  const getRandomInt = (max) => {
-    return Math.floor(Math.random() * max);
-  };
+  console.log("votes initial state: ", votes);
 
   const onNewAnecdote = () => {
-    const currentInt = selected;
-    let randomInt = getRandomInt(anecdotes.length);
+    let randomInt;
 
     // prevent getting the same number in row
-    while (randomInt === currentInt) {
-      randomInt = getRandomInt(anecdotes.length);
-    }
+    do {
+      randomInt = Math.floor(Math.random() * anecdotes.length);
+    } while (randomInt === selected);
+
+    console.log("randomInt: ", randomInt);
 
     setSelected(randomInt);
   };
 
   const onVote = () => {
-    let currentVote = votes[selected] || 0;
-    const newTotalVote = currentVote + 1;
-    const votesUpdated = { ...votes, [selected]: newTotalVote };
-
-    setVotes(votesUpdated);
-
-    // update most voted on anecdote
-    if (newTotalVote > mostVoted.votes) {
-      const newMostVoted = {
-        anecdote: anecdotes[selected],
-        votes: newTotalVote,
-      };
-      setMostVoted(newMostVoted);
-    }
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    console.log("new vote: ", newVotes[selected]);
+    setVotes(newVotes);
   };
+
+  const maxVotes = Math.max(...votes);
+  const mostVoted = votes.indexOf(maxVotes);
 
   return (
     <div>
-      <h1>Anectode of the day</h1>
+      <h1>Anecdote of the day</h1>
       <Anecdote anecdote={anecdotes[selected]} votes={votes[selected] || 0} />
       <Button action={onVote} label={"vote"} />
       <Button action={onNewAnecdote} label={"new anecdote"} />
 
       <h2>Anecdote with most votes</h2>
-      <AnecdoteMostVoted mostVoted={mostVoted} />
+      <AnecdoteMostVoted anecdote={anecdotes[mostVoted]} votes={maxVotes} />
     </div>
   );
 };
