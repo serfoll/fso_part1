@@ -1,6 +1,6 @@
 # Fullstack open part1
 
-## exercises 1.1 - 1.14
+## exercises 1.1 - 1.14 & 2.1.-2.5
 
 ### 1.1-1.5 Course information
 
